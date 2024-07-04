@@ -50,6 +50,7 @@ if __name__ == '__main__':
     args.forward_dir = '../result' / args.net_name / 'reconstructions_leaderboard' / 'public'
     print(f'Saved into {args.forward_dir}')
     forward(args)
+    # forward는 testpart.py의 함수
     
     # Private Acceleration 데이터 경로 설정 및 forward 함수 호출
     args.data_path = args.path_data / private_acc # / "kspace"    
