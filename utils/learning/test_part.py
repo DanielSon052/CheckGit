@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from collections import defaultdict
+from collections import defaultdict # 기본값을 설정할 수 있는 딕셔너리 자료형
 from utils.common.utils import save_reconstructions
 from utils.data.load_data import create_data_loaders
 from utils.model.varnet import VarNet
@@ -9,7 +9,8 @@ from utils.model.varnet import VarNet
 def test(args, model, data_loader):
     model.eval()
     reconstructions = defaultdict(dict)
-    
+
+    # train과 동일
     with torch.no_grad():
         for (mask, kspace, _, _, fnames, slices) in data_loader:
             kspace = kspace.cuda(non_blocking=True)
@@ -25,7 +26,7 @@ def test(args, model, data_loader):
         )
     return reconstructions, None
 
-
+# test의 경우 train아닌 forward함수
 def forward(args):
 
     device = torch.device(f'cuda:{args.GPU_NUM}' if torch.cuda.is_available() else 'cpu')
