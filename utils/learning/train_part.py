@@ -19,7 +19,6 @@ import os
 #args -  g, b, e, l, r, n, t, v
 #data_loader는 train함수에서 create_data_loaders를 이용해서 생성
 #model은 train함수에서 VarNet함수로 생성.
-#
 
 
 def train_epoch(args, epoch, model, data_loader, optimizer, loss_type): #한 에폭에 대한
@@ -53,6 +52,9 @@ def train_epoch(args, epoch, model, data_loader, optimizer, loss_type): #한 에
     total_loss = total_loss / len_loader
     return total_loss, time.perf_counter() - start_epoch
 
+# train 함수와 validate함수 분리
+# train에서 에폭별로 실행되는 train_epoch함수의 loss계산.. 등의 과정을 validate에서 진행
+# 
 
 def validate(args, model, data_loader):
     model.eval()
@@ -61,12 +63,14 @@ def validate(args, model, data_loader):
     start = time.perf_counter()
 
     with torch.no_grad():
-        for iter, data in enumerate(data_loader):
+        for iter, data in enumerate(data_loader): # eval dataloader
             mask, kspace, target, _, fnames, slices = data
             kspace = kspace.cuda(non_blocking=True)
             mask = mask.cuda(non_blocking=True)
-            output = model(kspace, mask)
+            output = model(kspace, mask) 
 
+            # model의 eval 모드의 ouput: reconstruct, target
+            # 사이즈 : 
             for i in range(output.shape[0]):
                 reconstructions[fnames[i]][int(slices[i])] = output[i].cpu().numpy()
                 targets[fnames[i]][int(slices[i])] = target[i].numpy()
@@ -100,7 +104,8 @@ def save_model(args, exp_dir, epoch, model, optimizer, best_val_loss, is_new_bes
         shutil.copyfile(exp_dir / 'model.pt', exp_dir / 'best_model.pt')
 
 
-def download_model(url, fname): # pretrained Model 사용시에만 call
+# pretrained Model 사용시에만 call
+def download_model(url, fname): 
     response = requests.get(url, timeout=10, stream=True)
 
     chunk_size = 8 * 1024 * 1024  # 8 MB chunks
@@ -118,7 +123,9 @@ def download_model(url, fname): # pretrained Model 사용시에만 call
             fh.write(chunk)
 
 
-        
+# 기본적인 모델, loss, optimizer세팅, train,val loader 생성
+# epoch loop내에서 train_epoch 함수와 validate함수 호출
+
 def train(args):
     device = torch.device(f'cuda:{args.GPU_NUM}' if torch.cuda.is_available() else 'cpu')
     torch.cuda.set_device(device)
