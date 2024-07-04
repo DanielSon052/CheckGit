@@ -16,8 +16,14 @@ from utils.model.varnet import VarNet
 
 import os
 
-def train_epoch(args, epoch, model, data_loader, optimizer, loss_type):
-    model.train()
+#args -  g, b, e, l, r, n, t, v
+#data_loader는 train함수에서 create_data_loaders를 이용해서 생성
+#model은 train함수에서 VarNet함수로 생성.
+#
+
+
+def train_epoch(args, epoch, model, data_loader, optimizer, loss_type): #한 에폭에 대한
+    model.train() 
     start_epoch = start_iter = time.perf_counter()
     len_loader = len(data_loader)
     total_loss = 0.
@@ -77,7 +83,7 @@ def validate(args, model, data_loader):
     num_subjects = len(reconstructions)
     return metric_loss, num_subjects, reconstructions, targets, None, time.perf_counter() - start
 
-
+# train loop에서 실행
 def save_model(args, exp_dir, epoch, model, optimizer, best_val_loss, is_new_best):
     torch.save(
         {
@@ -94,7 +100,7 @@ def save_model(args, exp_dir, epoch, model, optimizer, best_val_loss, is_new_bes
         shutil.copyfile(exp_dir / 'model.pt', exp_dir / 'best_model.pt')
 
 
-def download_model(url, fname):
+def download_model(url, fname): # pretrained Model 사용시에만 call
     response = requests.get(url, timeout=10, stream=True)
 
     chunk_size = 8 * 1024 * 1024  # 8 MB chunks
@@ -120,7 +126,8 @@ def train(args):
 
     model = VarNet(num_cascades=args.cascade, 
                    chans=args.chans, 
-                   sens_chans=args.sens_chans)
+                   sens_chans=args.sens_chans) 
+    # from utils.model.varnet import VarNet
     model.to(device=device)
 
     """
