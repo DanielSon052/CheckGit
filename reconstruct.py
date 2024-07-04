@@ -30,25 +30,28 @@ if __name__ == '__main__':
     
     public_acc, private_acc = None, None
 
+    # 테스트 데이터 경로에 있는 폴더가 2개인지 확인
     assert(len(os.listdir(args.path_data)) == 2)
 
+    # 각 acc 폴더 이름을 확인
     for acc in os.listdir(args.path_data):
       if acc in ['acc4', 'acc5', 'acc8']:
         public_acc = acc
       else:
         private_acc = acc
-        
+
+    # acc 폴더가 잘 설정되었는지 확인
     assert(None not in [public_acc, private_acc])
     
     start_time = time.time()
     
-    # Public Acceleration
+    # Public Acceleration 데이터 경로 설정 및 forward 함수 호출
     args.data_path = args.path_data / public_acc # / "kspace"    
     args.forward_dir = '../result' / args.net_name / 'reconstructions_leaderboard' / 'public'
     print(f'Saved into {args.forward_dir}')
     forward(args)
     
-    # Private Acceleration
+    # Private Acceleration 데이터 경로 설정 및 forward 함수 호출
     args.data_path = args.path_data / private_acc # / "kspace"    
     args.forward_dir = '../result' / args.net_name / 'reconstructions_leaderboard' / 'private'
     print(f'Saved into {args.forward_dir}')
