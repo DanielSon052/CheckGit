@@ -48,11 +48,13 @@ def forward(args):
 
     device = torch.device(f'cuda:{args.GPU_NUM}' if torch.cuda.is_available() else 'cpu')
     torch.cuda.set_device(device)
-    
+
+    #아래 메인에서 정답 데이터들의 경로를 지정해서 args로 넘겨줌.
     leaderboard_data = glob.glob(os.path.join(args.leaderboard_data_path,'*.h5'))
     if len(leaderboard_data) != 58:
         raise  NotImplementedError('Leaderboard Data Size Should Be 58')
-    
+
+    #아래 메인에서 reconstruct된 데이터들의 경로를 지정해서 args로 넘겨줌.
     your_data = glob.glob(os.path.join(args.your_data_path,'*.h5'))
     if len(your_data) != 58:
         raise  NotImplementedError('Your Data Size Should Be 58')           
@@ -124,13 +126,15 @@ if __name__ == '__main__':
         private_acc = acc
     
     # public acceleration
-    args.leaderboard_data_path = args.path_leaderboard_data / public_acc / 'image'
-    args.your_data_path = args.path_your_data / 'public'
+    args.leaderboard_data_path = args.path_leaderboard_data / public_acc / 'image' # public set의 정답 데이터 경로
+    args.your_data_path = args.path_your_data / 'public' # public데이터에 대해 reconstruct된 데이터 경로
+    #평가해야할 reconstruct된 파일들이 어디에 있는지 arg에 저장해서, leaderboard_eval의 forward에 넣음.
     SSIM_public = forward(args)
     
     # private acceleration
-    args.leaderboard_data_path = args.path_leaderboard_data / private_acc / 'image'
-    args.your_data_path = args.path_your_data / 'private'
+    args.leaderboard_data_path = args.path_leaderboard_data / private_acc / 'image' # private set의 정답 데이터 경로
+    args.your_data_path = args.path_your_data / 'private' # private set에 대해 reconstruct한 데이터 경로
+    #평가해야할 reconstruct된 파일들이 어디에 있는지 arg에 저장해서, leaderboard_eval의 forward에 넣음.
     SSIM_private = forward(args)
     
     print("Leaderboard SSIM : {:.4f}".format((SSIM_public + SSIM_private) / 2))
