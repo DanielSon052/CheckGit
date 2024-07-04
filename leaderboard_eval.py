@@ -130,12 +130,14 @@ if __name__ == '__main__':
     args.your_data_path = args.path_your_data / 'public' # public데이터에 대해 reconstruct된 데이터 경로
     #평가해야할 reconstruct된 파일들이 어디에 있는지 arg에 저장해서, leaderboard_eval의 forward에 넣음.
     SSIM_public = forward(args)
+    #public 파일들에 대해 ssim계산 후 반환
     
     # private acceleration
     args.leaderboard_data_path = args.path_leaderboard_data / private_acc / 'image' # private set의 정답 데이터 경로
     args.your_data_path = args.path_your_data / 'private' # private set에 대해 reconstruct한 데이터 경로
     #평가해야할 reconstruct된 파일들이 어디에 있는지 arg에 저장해서, leaderboard_eval의 forward에 넣음.
     SSIM_private = forward(args)
+    #private 파일들에 대해 ssim계산 후 반환
     
     print("Leaderboard SSIM : {:.4f}".format((SSIM_public + SSIM_private) / 2))
     print("="*10 + " Details " + "="*10)
