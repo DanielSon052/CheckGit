@@ -16,6 +16,16 @@ from utils.common.utils import seed_fix
 #파라미터: GPU 번호, 배치 크기, 에포크 수, 학습률, 보고 간격, 네트워크 이름 등
 #하이퍼파라미터 : 캐스케이드 수, U-Net의 채널 수, 감도 맵의 채널 수 등
 
+# train.sh: 모델 훈련을 실행하기 위한 쉘 스크립트
+
+# python train.py: train.py 스크립트를 실행.
+# -b 1: 배치 사이즈를 1로 설정.
+# -e 5: 에포크 수를 5로 설정.
+# -l 0.001: 학습률을 0.001로 설정.
+# -r 10: 주기적으로 모델을 저장하는 간격을 10으로 설정.
+# -n 'test_Varnet': 네트워크 이름을 'test_Varnet'으로 설정.
+# -t '/home/Data/train/': 학습 데이터의 경로를 '/home/Data/train/'으로 설정.
+# -v '/home/Data/val/': 검증 데이터의 경로를 '/home/Data/val/'으로 설정.
 
 def parse():
     parser = argparse.ArgumentParser(description='Train Varnet on FastMRI challenge Images',
