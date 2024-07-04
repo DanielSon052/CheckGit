@@ -12,6 +12,10 @@ if os.getcwd() + '/utils/common/' not in sys.path:
     sys.path.insert(1, os.getcwd() + '/utils/common/')
 from utils.common.utils import seed_fix
 
+#argparse를 사용하여 명령어 인자들을 파싱.
+#파라미터: GPU 번호, 배치 크기, 에포크 수, 학습률, 보고 간격, 네트워크 이름 등
+#하이퍼파라미터 : 캐스케이드 수, U-Net의 채널 수, 감도 맵의 채널 수 등
+
 
 def parse():
     parser = argparse.ArgumentParser(description='Train Varnet on FastMRI challenge Images',
@@ -36,13 +40,15 @@ def parse():
     args = parser.parse_args()
     return args
 
+# 메인함수
 if __name__ == '__main__':
     args = parse()
     
-    # fix seed
+    # fix seed(재현 가능 보장)
     if args.seed is not None:
         seed_fix(args.seed)
 
+    # 결과 저장 경로 설정
     args.exp_dir = '../result' / args.net_name / 'checkpoints'
     args.val_dir = '../result' / args.net_name / 'reconstructions_val'
     args.main_dir = '../result' / args.net_name / __file__
@@ -51,4 +57,5 @@ if __name__ == '__main__':
     args.exp_dir.mkdir(parents=True, exist_ok=True)
     args.val_dir.mkdir(parents=True, exist_ok=True)
 
-    train(args)
+    train(args) # in train_part.py
+
