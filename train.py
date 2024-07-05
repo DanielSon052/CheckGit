@@ -13,7 +13,7 @@ if os.getcwd() + '/utils/common/' not in sys.path:
 from utils.common.utils import seed_fix
 
 #argparse를 사용하여 명령어 인자들을 파싱.
-#파라미터: GPU 번호, 배치 크기, 에포크 수, 학습률, 보고 간격, 네트워크 이름 등
+#파라미터: GPU 번호, 배치 크기, 에포크 수, 학습률, 보고 간격, 네트워크 이름 등 이건 테스트다
 #하이퍼파라미터 : 캐스케이드 수, U-Net의 채널 수, 감도 맵의 채널 수 등
 
 # train.sh: 모델 훈련을 실행하기 위한 쉘 스크립트
